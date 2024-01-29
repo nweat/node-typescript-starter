@@ -1,34 +1,58 @@
 ## Node TypeScript Starter Project
 
-A starter project demonstrating a basic 3 layer architecture setup of a Node Express API
+A starter project demonstrating a basic 3 layer architecture setup of a Node Express API including the setup of Prisma ORM with MySQL
 
-<br>
+### Project structure
 
-### Features
-
-- Functional based approach supporting pure functions with dependency injection
-- Prefix versioning of routes
-- Auto generation of API docs with express-jsdoc-swagger
-- Setup of eslint and prettier
-- Setup of test with jest and supertest
-
-<br>
-
-### API Documentation
-
-http://localhost:3000/api-docs/
-
-<br>
+```
+├── prisma
+├── src
+│   ├── __tests__
+│   ├── controllers
+│   ├── middlewares
+│   ├── routes
+│   ├── services
+│   ├── app.ts - configure the express app
+│   ├── index.ts - start the express server
+├── tsconfig.json
+├── .eslintrc
+├── .prettierrc
+├── .env
+├── .env.example
+├── package.json
+├── yarn.lock
+└── README.md
+```
 
 ### Prerequisites
 
 - Install node v20+ (Recommended install via [nvm](https://github.com/nvm-sh/nvm))
 - Install npm v9+
 - Install yarn package manager
+- yarn global add dotenv-cli
+- MySQL database server running
+
+### Features
+
+- Functional based approach supporting pure functions with dependency injection
+- Setup of [Prisma ORM](https://www.prisma.io/) with MySQL provider
+- Generation of swagger UI with [express-jsdoc-swagger](https://brikev.github.io/express-jsdoc-swagger-docs/#/)
+- Use of [dotenv](https://www.npmjs.com/package/dotenv) to load environment variables from .env file
+- Prefix versioning of routes
+- Setup of eslint and prettier for code formatting and enforcing code standards
+- Setup of testing environment with jest and supertest
+- Generation of .gitignore with [gitignore.io](https://www.toptal.com/developers/gitignore)
+- Use [fakerjs](https://fakerjs.dev/) for generating fake test data
 
 <br>
 
-### Install & run locally
+# API Documentation
+
+http://localhost:3000/api-docs/
+
+<br>
+
+# Install & run locally
 
 ```
 nvm use 20
@@ -38,7 +62,7 @@ yarn dev
 
 <br>
 
-### Test
+# Test
 
 ```
 yarn test
@@ -46,11 +70,28 @@ yarn test
 
 <br>
 
-### Build
+# Prisma ORM
 
-Transpiles TypeScript into JavaScript. The transpiled files will be inside the `/build` directory
+https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases-typescript-mysql
 
-`yarn build`
+### Setup Prisma in an existing project
+
+This setup should only be done ONCE. We need to do this to initialize the migration history for an existing database.
+
+- `npx prisma init`: creates the new directory called "prisma" that contains the file "schema.prisma"
+
+- `npx prisma db pull`: reads the database schema and translates it into a Prisma data model
+
+- `mkdir -p prisma/migrations/0_init`: "migrations" folder will contain all the migrations. "0_init" is the first migration
+
+- `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql` : generates the migration file
+
+- `npx prisma migrate resolve --applied 0_init`: mark the migration as applied. We now have a baseline for the current database schema.
+
+### How to apply changes to existing migrations?
+
+- Update the schema inside `prisma/schema.prisma` with the necessary changes
+- `npx prisma migrate dev --name <NAME>`: Use this command to make further changes to your database schema.
 
 <br>
 
@@ -60,19 +101,12 @@ Add a new dependency:
 
 - `yarn add <package_name>`
 
-Add a new dev dependency:
+Add a new development dependency:
 
 - `yarn add <package_name> --save-dev`
 
 <br>
 
-### Recommended VSCode settings
+### Create a deployable version
 
-```
-{
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
-  ...
-}
-```
+`yarn start`: will compile your application according to the configurations in the `tsconfig.json` file, create a `build` folder and invoke the compiled JS server file

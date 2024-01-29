@@ -1,22 +1,45 @@
-export const usersService = (database: string) => {
-  const getUsersSvc = async () => {
-    //the actual logic of fetching users,
-    //pass all dependencies needed as parameters
+import { PrismaClient } from '@prisma/client';
+import { Context } from '../context';
 
-    //database
-    return [
-      {
-        id: 1,
-        name: 'tester',
+export const usersService = (prisma: PrismaClient) => {
+  // const prisma = new PrismaClient();
+
+  const getUser = async (userId: number) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
       },
-      {
-        id: 2,
-        name: 'tester2',
-      },
-    ];
+    });
+    return user;
+  };
+
+  const createUser = async ({ name, gender }: { name: string; gender: string }) => {
+    const result = await prisma.user.create({ data: { name, gender } });
+    return result.id;
   };
 
   return {
-    getUsersSvc,
+    getUser,
+    createUser,
   };
 };
+
+/**
+ *
+ * class UsersService {
+ *   private prisma: PrismaClient
+ *
+ *   constructor(prisma) {
+ *     this.prisma = prisma
+ *   }
+ *
+ *   public getUser()
+ *   public createUser()
+ *
+ *
+ * }
+ *
+ * export default UsersService;
+ *
+ *
+ */

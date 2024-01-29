@@ -1,21 +1,23 @@
 import { Request, Response } from 'express';
 import { usersService } from '../services/user';
+import { PrismaClient } from '@prisma/client';
 
-//Define user type
-export type User = {
-  id: string;
-  name: string;
-};
-
-const getUsers = (database: string) => {
+const createUser = (prisma: PrismaClient) => {
   return async function (req: Request, res: Response) {
-    //call the user service
-    const users = await usersService(database).getUsersSvc();
+    try {
+      const { name, gender } = req.body;
 
-    return res.status(200).json({
-      ...users,
-    });
+      //call the user service to create the user
+      const id = await usersService(prisma).createUser({ name, gender });
+
+      return res.status(200).json({
+        id,
+      });
+    } catch (error) {
+      if (error instanceof Error) return res.status(500).json({ error: error.name, message: error.message });
+      return res.status(500).json({ error: 'Unknown', message: 'Unknown' });
+    }
   };
 };
 
-export { getUsers };
+export { createUser };

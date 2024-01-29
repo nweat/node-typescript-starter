@@ -1,6 +1,6 @@
 ## Node TypeScript Starter Project
 
-A starter project demonstrating a basic 3 layer architecture setup of a Node Express API including the setup of Prisma ORM with MySQL
+A starter project demonstrating a basic setup of a Node Express API including the setup of Prisma ORM with MySQL
 
 ### Project structure
 
@@ -54,6 +54,8 @@ http://localhost:3000/api-docs/
 
 # Install & run locally
 
+Ensure that `.env` file contains the MySQL Connection string in the `DATABASE_URL` variable
+
 ```
 nvm use 20
 yarn install
@@ -64,9 +66,7 @@ yarn dev
 
 # Test
 
-```
-yarn test
-```
+`yarn test`
 
 <br>
 
@@ -74,7 +74,7 @@ yarn test
 
 https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases-typescript-mysql
 
-### Setup Prisma in an existing project
+### Setup Prisma in an existing project and Baseline your Database
 
 This setup should only be done ONCE. We need to do this to initialize the migration history for an existing database.
 

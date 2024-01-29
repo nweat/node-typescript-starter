@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { Context } from '../context';
 
 export const usersService = (prisma: PrismaClient) => {
   // const prisma = new PrismaClient();

@@ -44,7 +44,7 @@ const options = {
   filesPattern: ['./routes/**/*.js', './routes/**/*.ts'],
   baseDir: __dirname,
   security: {
-    bearerAuth: {
+    BearerAuth: {
       type: 'http',
       scheme: 'bearer',
     },

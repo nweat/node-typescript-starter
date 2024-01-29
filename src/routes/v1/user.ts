@@ -39,6 +39,7 @@ export default (prisma: PrismaClient) => {
    * @param {number} id.path - userId
    * @return {User} 200 - Success - application/json
    * @return {Error} 500 - Error - application/json
+   * @security BearerAuth
    */
   router.get('/:id', verifyJWT, async (req, res) => {
     try {
@@ -67,6 +68,7 @@ export default (prisma: PrismaClient) => {
    * @param {User} request.body.required
    * @return {CreateUserResponsePayload} 200 - Success - application/json
    * @return {Error} 500 - Error - application/json
+   * @security BearerAuth
    */
   router.post('/create', verifyJWT, createUser(prisma));
   return router;

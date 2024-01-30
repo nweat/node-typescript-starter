@@ -4,6 +4,8 @@ A starter project demonstrating a basic setup of a Node Express API including th
 
 ### Project structure
 
+![Screenshot](architecture.png)
+
 ```
 ├── prisma
 ├── src
@@ -29,7 +31,6 @@ A starter project demonstrating a basic setup of a Node Express API including th
 - Install node v20+ (Recommended install via [nvm](https://github.com/nvm-sh/nvm))
 - Install npm v9+
 - Install yarn package manager
-- yarn global add dotenv-cli
 - MySQL database server running
 
 ### Features

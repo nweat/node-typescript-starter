@@ -44,6 +44,8 @@ A starter project demonstrating a basic setup of a Node Express API including th
 - Setup of testing environment with jest and supertest
 - Generation of .gitignore with [gitignore.io](https://www.toptal.com/developers/gitignore)
 - Use [fakerjs](https://fakerjs.dev/) for generating fake test data
+- Setup of [jest](https://jestjs.io/) for testing
+- Setup of [supertest](https://www.npmjs.com/package/supertest) for testing API routes
 
 <br>
 

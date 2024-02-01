@@ -8,7 +8,7 @@ import expressJSDocSwagger from 'express-jsdoc-swagger';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 
-dotenv.config();
+dotenv.config(); //loads environemnt variables from .env file
 
 const prisma = new PrismaClient();
 

@@ -47,69 +47,55 @@ A starter project demonstrating a basic setup of a Node Express API including th
 - Setup of [jest](https://jestjs.io/) for testing
 - Setup of [supertest](https://www.npmjs.com/package/supertest) for testing API routes
 
-<br>
-
-# API Documentation
+### API Docs
 
 http://localhost:3000/api-docs/
 
 <br>
 
-# Install & run locally
+# Setup
 
-Ensure that `.env` file contains the MySQL Connection string in the `DATABASE_URL` variable
+### Step 1: [Baseline](https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining) an existing database with Prisma ORM
 
-```
-nvm use 20
-yarn install
-yarn dev
-```
+We only need to do this step ONCE. The purpose is to generate the schema from the existing production database schema. This step is necessary so that we can create the development environment.
 
-<br>
+1. If there is an existing `prisma` folder, delete it.
 
-# Test
+2. In the `.env` file, set the `DATABASE_URL` to the connection URL for the production database.
 
-`yarn test`
+3. `npx prisma init`: creates the new directory called "prisma" that contains the file "schema.prisma"
 
-<br>
+4. Inside `schema.prisma`, ensure to specify the correct datasource provider. For example "mysql" or "postgresql"
 
-# Prisma ORM
+5. `npx prisma db pull`: reads the database schema and translates it into a Prisma data model. Open up the "schema.prisma" file to check the models that were generated.
 
-https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases-typescript-mysql
+6. `mkdir -p prisma/migrations/0_init`: "migrations" folder will contain all the migrations. "0_init" is the first migration
 
-### Setup Prisma in an existing project and Baseline your Database
+7. `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql` : generates the migration file
 
-This setup should only be done ONCE. We need to do this to initialize the migration history for an existing database.
+8. `npx prisma migrate resolve --applied 0_init`: mark the migration as applied. We now have a baseline for the current database schema. The database will now contain a new table called "\_prisma_migrations" that will be used to hold a history of all migrations.
 
-- `npx prisma init`: creates the new directory called "prisma" that contains the file "schema.prisma"
+9. Please make sure that you set the `DATABASE_URL` back to your local connection URL. Ideally you should not commit the ".env" file and handle this through your CI/CD flow.
 
-- `npx prisma db pull`: reads the database schema and translates it into a Prisma data model
+10. If you need to make changes to the schema after the migration is applied, update the schema inside `prisma/schema.prisma` and use this command: `npx prisma migrate dev --name <NAME>` to make further changes to your database schema.
 
-- `mkdir -p prisma/migrations/0_init`: "migrations" folder will contain all the migrations. "0_init" is the first migration
+### Step 2: Build Docker Containers and Run
 
-- `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql` : generates the migration file
+- `docker-compose build`
+- `docker-compose up -d`
 
-- `npx prisma migrate resolve --applied 0_init`: mark the migration as applied. We now have a baseline for the current database schema.
+Access the MySQL instance:
 
-### How to apply changes to existing migrations?
-
-- Update the schema inside `prisma/schema.prisma` with the necessary changes
-- `npx prisma migrate dev --name <NAME>`: Use this command to make further changes to your database schema.
-
-<br>
-
-### Dependency management
-
-Add a new dependency:
-
-- `yarn add <package_name>`
-
-Add a new development dependency:
-
-- `yarn add <package_name> --save-dev`
+- `docker exec -it mysql mysql -p`
 
 <br>
 
 ### Create a deployable version
 
 `yarn start`: will compile your application according to the configurations in the `tsconfig.json` file, create a `build` folder and invoke the compiled JS server file
+
+<br>
+
+### Deploying database changes using GitHub Actions
+
+https://www.prisma.io/docs/orm/prisma-client/deployment/deploy-database-changes-with-prisma-migrate

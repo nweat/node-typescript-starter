@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node build/index.js",
-    "dev": "nodemon --watch \"*.ts\" --exec \"ts-node\" ./src/index.ts",
+    "dev": "npx prisma migrate deploy && nodemon --watch \"*.ts\" --exec \"ts-node\" ./src/index.ts",
     "eslint:check": "eslint src --ext .ts",
     "eslint:fix": "eslint --fix src --ext .ts",
     "prettier:check": "prettier --check './src/**/*.ts'",
